@@ -43,7 +43,6 @@ public class MainFragment extends Fragment {
     RecyclerView recipeRecyclerView;
     private ApiInterface apiInterface;
     private List<Result> resultList;
-    private MainActivity mainActivity;
     private boolean mTwoPane;
     private RecipeAdapter recipeAdapter;
 
@@ -92,6 +91,7 @@ public class MainFragment extends Fragment {
                             disposable.dispose();
                         }
                         recipeAdapter = new RecipeAdapter(getActivity(), resultList);
+                        mTwoPane = MainActivity.getNoPane();
                         if (mTwoPane) {
                             //GridLayout
                             GridLayoutManager gridLayoutManager = new
@@ -115,10 +115,4 @@ public class MainFragment extends Fragment {
         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mainActivity = (MainActivity) context;
-        mTwoPane = ((MainActivity) context).getNoPane();
-    }
 }

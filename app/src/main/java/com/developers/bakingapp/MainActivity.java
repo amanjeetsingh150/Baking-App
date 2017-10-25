@@ -2,10 +2,11 @@ package com.developers.bakingapp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean mTwoPane;
+    private static boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean getNoPane() {
+    public static boolean getNoPane() {
         return mTwoPane;
     }
 }

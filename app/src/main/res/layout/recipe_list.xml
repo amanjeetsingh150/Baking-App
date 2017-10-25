@@ -32,12 +32,12 @@
                 android:id="@+id/dish_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textColor="@android:color/black"
                 android:layout_marginStart="10dp"
                 android:textStyle="bold|italic"
                 android:layout_marginTop="20dp"
-                android:fontFamily="cursive"
+                android:fontFamily="serif"
                 android:layout_toEndOf="@+id/dish_image_view"/>
 
             <TextView
@@ -47,9 +47,9 @@
                 android:layout_below="@+id/dish_text_view"
                 android:layout_toEndOf="@+id/dish_image_view"
                 android:layout_marginStart="10dp"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:fontFamily="cursive"
+                android:fontFamily="serif"
                 android:textColor="@android:color/black" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
