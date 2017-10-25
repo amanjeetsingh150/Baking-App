@@ -1,15 +1,20 @@
 package com.developers.bakingapp;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.developers.bakingapp.adapters.RecipeAdapter;
 import com.developers.bakingapp.model.Result;
 import com.developers.bakingapp.util.ApiInterface;
 import com.developers.bakingapp.util.Constants;
@@ -38,6 +43,9 @@ public class MainFragment extends Fragment {
     RecyclerView recipeRecyclerView;
     private ApiInterface apiInterface;
     private List<Result> resultList;
+    private MainActivity mainActivity;
+    private boolean mTwoPane;
+    private RecipeAdapter recipeAdapter;
 
     public MainFragment() {
         // Required empty public constructor
@@ -83,6 +91,21 @@ public class MainFragment extends Fragment {
                         if (!disposable.isDisposed()) {
                             disposable.dispose();
                         }
+                        recipeAdapter = new RecipeAdapter(getActivity(), resultList);
+                        if (mTwoPane) {
+                            //GridLayout
+                            GridLayoutManager gridLayoutManager = new
+                                    GridLayoutManager(getActivity(), 3);
+                            recipeRecyclerView.setLayoutManager(gridLayoutManager);
+                            recipeRecyclerView.setAdapter(recipeAdapter);
+                        } else {
+                            //LinearVerticalLayout
+                            LinearLayoutManager linearLayoutManager = new
+                                    LinearLayoutManager(getActivity());
+                            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                            recipeRecyclerView.setLayoutManager(linearLayoutManager);
+                            recipeRecyclerView.setAdapter(recipeAdapter);
+                        }
                     }
                 });
         return resultList;
@@ -92,4 +115,10 @@ public class MainFragment extends Fragment {
         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mainActivity = (MainActivity) context;
+        mTwoPane = ((MainActivity) context).getNoPane();
+    }
 }

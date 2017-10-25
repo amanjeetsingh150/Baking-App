@@ -5,12 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.developers.bakingapp.R;
 import com.developers.bakingapp.model.Result;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -21,6 +23,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     private Context context;
     private List<Result> resultList;
+    private String servings;
 
     public RecipeAdapter(Context context, List<Result> resultList) {
         this.context = context;
@@ -36,7 +39,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
-
+        holder.dishText.setText(resultList.get(position).getName());
+        servings = context.getString(R.string.servings) + " " +
+                String.valueOf(resultList.get(position).getServings());
+        holder.servingText.setText(servings);
     }
 
     @Override
@@ -45,6 +51,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.dish_text_view)
+        TextView dishText;
+
+        @BindView(R.id.servings_text_view)
+        TextView servingText;
+
 
         public RecipeViewHolder(View itemView) {
             super(itemView);
