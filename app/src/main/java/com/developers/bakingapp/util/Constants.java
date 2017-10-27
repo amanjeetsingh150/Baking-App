@@ -10,6 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Constants {
     public static final String BASE_URL = "http://d17h27t6h515a5.cloudfront.net/";
+    public static final String KEY_INGREDIENTS = "ingredients";
+    public static final String KEY_STEPS = "steps";
     private static Retrofit retrofit = null;
 
     public static Retrofit getRetrofit() {
