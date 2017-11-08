@@ -1,6 +1,7 @@
 package com.developers.bakingapp;
 
 
+import android.content.res.Configuration;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
@@ -74,7 +75,10 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         if (url.length() != 0) {
             initializeMedia();
             initializePlayer(Uri.parse(url));
-
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                stepDesc.setText(description);
+            }
+            
         }
         return view;
     }
@@ -111,6 +115,14 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         }
     }
 
+    private void releasePlayer() {
+        if (simpleExoPlayer != null) {
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+            simpleExoPlayer = null;
+        }
+    }
+
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
 
@@ -127,8 +139,24 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     }
 
     @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+    public void onDestroy() {
+        super.onDestroy();
+        releasePlayer();
+        if (mediaSessionCompat != null) {
+            mediaSessionCompat.setActive(false);
+        }
+    }
 
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if (playbackState == ExoPlayer.STATE_READY && playWhenReady) {
+            playbackBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
+                    simpleExoPlayer.getCurrentPosition(), 1f);
+        } else if (playbackState == ExoPlayer.STATE_READY) {
+            playbackBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    simpleExoPlayer.getCurrentPosition(), 1f);
+        }
+        mediaSessionCompat.setPlaybackState(playbackBuilder.build());
     }
 
     @Override
