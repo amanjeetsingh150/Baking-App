@@ -1,6 +1,8 @@
 package com.developers.bakingapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.developers.bakingapp.R;
+import com.developers.bakingapp.VideoActivity;
 import com.developers.bakingapp.model.Step;
+import com.developers.bakingapp.util.Constants;
 
 import java.util.List;
 
@@ -37,9 +41,19 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
     @Override
-    public void onBindViewHolder(VideoViewHolder holder, int position) {
+    public void onBindViewHolder(VideoViewHolder holder, final int position) {
         String shortDescription = stepList.get(position).getShortDescription();
         holder.stepTextView.setText(shortDescription);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, VideoActivity.class);
+                intent.putExtra(Constants.KEY_STEPS_ID, stepList.get(position).getId());
+                intent.putExtra(Constants.KEY_STEPS_DESC, stepList.get(position).getDescription());
+                intent.putExtra(Constants.KEY_STEPS_URL, stepList.get(position).getVideoURL());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -51,6 +65,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
         @BindView(R.id.step_name_text_view)
         TextView stepTextView;
+        @BindView(R.id.card_video_list)
+        CardView cardView;
 
         public VideoViewHolder(View itemView) {
             super(itemView);
