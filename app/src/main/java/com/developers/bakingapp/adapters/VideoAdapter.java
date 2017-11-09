@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import com.developers.bakingapp.R;
 import com.developers.bakingapp.VideoActivity;
+import com.developers.bakingapp.VideoFragment;
 import com.developers.bakingapp.model.Step;
+import com.developers.bakingapp.util.ClickCallBack;
 import com.developers.bakingapp.util.Constants;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     private Context context;
     private List<Step> stepList;
+    private ClickCallBack clickCallBack;
 
     public VideoAdapter(Context context, List<Step> stepList) {
         this.context = context;
@@ -47,13 +50,15 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, VideoActivity.class);
-                intent.putExtra(Constants.KEY_STEPS_ID, stepList.get(position).getId());
-                intent.putExtra(Constants.KEY_STEPS_DESC, stepList.get(position).getDescription());
-                intent.putExtra(Constants.KEY_STEPS_URL, stepList.get(position).getVideoURL());
-                context.startActivity(intent);
+                clickCallBack.onClick(context,stepList.get(position).getId(),
+                        stepList.get(position).getDescription(),
+                        stepList.get(position).getVideoURL());
             }
         });
+    }
+
+    public void setOnClick(ClickCallBack clickCallBack) {
+        this.clickCallBack = clickCallBack;
     }
 
     @Override

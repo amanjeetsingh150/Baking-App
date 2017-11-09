@@ -78,7 +78,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 stepDesc.setText(description);
             }
-            
+
         }
         return view;
     }
@@ -137,6 +137,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     public void onLoadingChanged(boolean isLoading) {
 
     }
+
 
     @Override
     public void onDestroy() {

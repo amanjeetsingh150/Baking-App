@@ -2,6 +2,7 @@ package com.developers.bakingapp;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,9 @@ import android.widget.TextView;
 import com.developers.bakingapp.adapters.VideoAdapter;
 import com.developers.bakingapp.model.Ingredient;
 import com.developers.bakingapp.model.Step;
+import com.developers.bakingapp.util.ClickCallBack;
 import com.developers.bakingapp.util.Constants;
+import com.google.android.exoplayer2.C;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,7 +33,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements ClickCallBack {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
     @BindView(R.id.ingredients_list_text_view)
@@ -42,6 +45,7 @@ public class DetailFragment extends Fragment {
     private List<Step> stepList;
     private List<Ingredient> ingredientList;
     private VideoAdapter videoAdapter;
+    private boolean twoPane;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -61,6 +65,7 @@ public class DetailFragment extends Fragment {
         stepList = gson.fromJson(steps,
                 new TypeToken<List<Step>>() {
                 }.getType());
+        twoPane = bundle.getBoolean(Constants.KEY_PANE);
     }
 
     @Override
@@ -78,8 +83,9 @@ public class DetailFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         stepRecyclerView.setLayoutManager(linearLayoutManager);
-        Log.d(TAG,stepList.size()+"");
-        videoAdapter=new VideoAdapter(getActivity(),stepList);
+        Log.d(TAG, stepList.size() + "");
+        videoAdapter = new VideoAdapter(getActivity(), stepList);
+        videoAdapter.setOnClick(this);
         stepRecyclerView.setAdapter(videoAdapter);
         return view;
     }
@@ -87,6 +93,14 @@ public class DetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
 
+    @Override
+    public void onClick(Context context, Integer id, String description, String url) {
+        Intent intent = new Intent(context, VideoActivity.class);
+        intent.putExtra(Constants.KEY_STEPS_ID, id);
+        intent.putExtra(Constants.KEY_STEPS_DESC, description);
+        intent.putExtra(Constants.KEY_STEPS_URL, url);
+        context.startActivity(intent);
     }
 }

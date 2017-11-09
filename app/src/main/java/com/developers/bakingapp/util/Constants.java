@@ -14,9 +14,10 @@ public class Constants {
     public static final String KEY_STEPS = "steps";
     public static final String KEY_STEPS_JSON = "stepListJson";
     public static final String KEY_INGREDIENTS_JSON = "ingredientsListJson";
-    public static final String KEY_STEPS_ID="stepId";
-    public static final String KEY_STEPS_DESC="stepDescription";
-    public static final String KEY_STEPS_URL="stepURL";
+    public static final String KEY_STEPS_ID = "stepId";
+    public static final String KEY_STEPS_DESC = "stepDescription";
+    public static final String KEY_STEPS_URL = "stepURL";
+    public static final String KEY_PANE = "twoPane";
     private static Retrofit retrofit = null;
 
     public static Retrofit getRetrofit() {
