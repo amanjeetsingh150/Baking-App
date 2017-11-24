@@ -5,4 +5,6 @@
     <string name="ingredients_text">INGREDIENTS:</string>
     <string name="steps_text">Steps:</string>
     <string name="application_name_exo_player">RecipeStepsVideo</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

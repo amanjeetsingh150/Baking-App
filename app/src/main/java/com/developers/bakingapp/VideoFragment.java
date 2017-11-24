@@ -5,14 +5,18 @@ import android.content.res.Configuration;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.developers.bakingapp.util.Constants;
@@ -49,8 +53,11 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     TextView stepDesc;
     @BindView(R.id.video_view_recipe)
     SimpleExoPlayerView simpleExoPlayerView;
+    @BindView(R.id.placeholder_no_video_image)
+    ImageView placeHolderImage;
     SimpleExoPlayer simpleExoPlayer;
     private String description, url;
+    private boolean pane;
     private MediaSessionCompat mediaSessionCompat;
     private PlaybackStateCompat.Builder playbackBuilder;
 
@@ -62,8 +69,11 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        description = bundle.getString(Constants.KEY_STEPS_DESC);
-        url = bundle.getString(Constants.KEY_STEPS_URL);
+        if (bundle != null) {
+            description = bundle.getString(Constants.KEY_STEPS_DESC);
+            url = bundle.getString(Constants.KEY_STEPS_URL);
+            pane = bundle.getBoolean(Constants.KEY_PANE_VID);
+        }
     }
 
     @Override
@@ -72,13 +82,49 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_video, container, false);
         ButterKnife.bind(this, view);
-        if (url.length() != 0) {
-            initializeMedia();
-            initializePlayer(Uri.parse(url));
+        if (savedInstanceState != null) {
+            int placeHolderVisibility = savedInstanceState.getInt(Constants.KEY_VISIBILITY_PLACEHOLDER);
+            Log.d(TAG, "ROOOOOOOOOOO" + placeHolderVisibility);
+            placeHolderImage.setVisibility(placeHolderVisibility);
+            int visibilityExo = savedInstanceState.getInt(Constants.KEY_VISIBILITY_EXO_PLAYER);
+            simpleExoPlayerView.setVisibility(visibilityExo);
+        }
+        Log.d(TAG, "URL : " + url);
+        if (url != null) {
+            if (url.equals("")) {
+                Log.d(TAG, "EMPTY URLLLLLLL");
+                simpleExoPlayerView.setVisibility(View.GONE);
+                placeHolderImage.setVisibility(View.VISIBLE);
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    stepDesc.setText(description);
+                } else {
+                    hideUI();
+                    simpleExoPlayerView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    simpleExoPlayerView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                }
+            } else {
+                placeHolderImage.setVisibility(View.GONE);
+                initializeMedia();
+                initializePlayer(Uri.parse(url));
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    stepDesc.setText(description);
+                } else {
+                    hideUI();
+                    simpleExoPlayerView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    simpleExoPlayerView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                }
+            }
+        } else {
+            Log.d(TAG, "NULL URLLLLLLL");
+            simpleExoPlayerView.setVisibility(View.GONE);
+            placeHolderImage.setVisibility(View.VISIBLE);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 stepDesc.setText(description);
+            } else {
+                hideUI();
+                simpleExoPlayerView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                simpleExoPlayerView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
             }
-
         }
         return view;
     }
@@ -97,6 +143,18 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         mediaSessionCompat.setActive(true);
     }
 
+    private void hideUI() {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+        //Use Google's "LeanBack" mode to get fullscreen in landscape
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
     private void initializePlayer(Uri mediaUri) {
         if (simpleExoPlayer == null) {
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -113,6 +171,13 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             simpleExoPlayer.prepare(mediaSource);
             simpleExoPlayer.setPlayWhenReady(true);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.KEY_VISIBILITY_EXO_PLAYER, simpleExoPlayerView.getVisibility());
+        outState.putInt(Constants.KEY_VISIBILITY_PLACEHOLDER, placeHolderImage.getVisibility());
     }
 
     private void releasePlayer() {

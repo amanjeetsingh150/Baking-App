@@ -3,24 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     tools:context="com.developers.bakingapp.DetailActivity">
 
-    <fragment
-        class="com.developers.bakingapp.DetailFragment"
+    <FrameLayout
+        android:id="@+id/detail_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.4"
-        tools:layout="@layout/fragment_detail" />
+        android:layout_weight="0.4" />
 
-    <fragment
+    <FrameLayout
         android:id="@+id/video_container_tab"
-        class="com.developers.bakingapp.VideoFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.6"
-        tools:layot="@layout/fragment_video" />
+        android:layout_weight="0.6" />
 </LinearLayout>

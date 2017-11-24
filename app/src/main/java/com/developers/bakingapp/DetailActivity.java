@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity{
+public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private boolean twoPane;
@@ -26,6 +26,9 @@ public class DetailActivity extends AppCompatActivity{
         setContentView(R.layout.activity_detail);
         if (findViewById(R.id.video_container_tab) != null) {
             twoPane = true;
+            Log.d(TAG, "IN if ");
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.video_container_tab, new VideoFragment()).commit();
         }
         stepJson = getIntent().getStringExtra(Constants.KEY_STEPS);
         ingredientJson = getIntent().getStringExtra(Constants.KEY_INGREDIENTS);
@@ -33,6 +36,7 @@ public class DetailActivity extends AppCompatActivity{
         bundle.putString(Constants.KEY_STEPS_JSON, stepJson);
         bundle.putString(Constants.KEY_INGREDIENTS_JSON, ingredientJson);
         bundle.putBoolean(Constants.KEY_PANE, twoPane);
+        Log.d(TAG, "PAnes " + twoPane);
         DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()

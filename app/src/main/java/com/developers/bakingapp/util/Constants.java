@@ -18,6 +18,10 @@ public class Constants {
     public static final String KEY_STEPS_DESC = "stepDescription";
     public static final String KEY_STEPS_URL = "stepURL";
     public static final String KEY_PANE = "twoPane";
+    public static final String KEY_PANE_VID = "pane";
+    public static final String KEY_VISIBILITY_EXO_PLAYER="exoPlayerVisibility";
+    public static final String KEY_VISIBILITY_PLACEHOLDER="placeHolderVisibility";
+
     private static Retrofit retrofit = null;
 
     public static Retrofit getRetrofit() {

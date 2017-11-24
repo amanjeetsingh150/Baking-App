@@ -97,10 +97,22 @@ public class DetailFragment extends Fragment implements ClickCallBack {
 
     @Override
     public void onClick(Context context, Integer id, String description, String url) {
-        Intent intent = new Intent(context, VideoActivity.class);
-        intent.putExtra(Constants.KEY_STEPS_ID, id);
-        intent.putExtra(Constants.KEY_STEPS_DESC, description);
-        intent.putExtra(Constants.KEY_STEPS_URL, url);
-        context.startActivity(intent);
+        if (twoPane) {
+            Bundle bundle = new Bundle();
+            bundle.putInt(Constants.KEY_STEPS_ID, id);
+            bundle.putString(Constants.KEY_STEPS_DESC, description);
+            bundle.putString(Constants.KEY_STEPS_URL, url);
+            bundle.putBoolean(Constants.KEY_PANE_VID, twoPane);
+            VideoFragment videoFragment = new VideoFragment();
+            videoFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.video_container_tab, videoFragment).commit();
+        } else {
+            Intent intent = new Intent(context, VideoActivity.class);
+            intent.putExtra(Constants.KEY_STEPS_ID, id);
+            intent.putExtra(Constants.KEY_STEPS_DESC, description);
+            intent.putExtra(Constants.KEY_STEPS_URL, url);
+            context.startActivity(intent);
+        }
     }
 }
