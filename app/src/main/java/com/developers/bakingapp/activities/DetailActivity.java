@@ -1,18 +1,13 @@
-package com.developers.bakingapp;
+package com.developers.bakingapp.activities;
 
-import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.developers.bakingapp.model.Ingredient;
-import com.developers.bakingapp.model.Step;
-import com.developers.bakingapp.util.ClickCallBack;
+import com.developers.bakingapp.DetailFragment;
+import com.developers.bakingapp.R;
+import com.developers.bakingapp.VideoFragment;
 import com.developers.bakingapp.util.Constants;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 

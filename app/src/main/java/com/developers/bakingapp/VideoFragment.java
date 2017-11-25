@@ -105,6 +105,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             } else {
                 placeHolderImage.setVisibility(View.GONE);
                 initializeMedia();
+                Log.d(TAG,"URLL "+url);
                 initializePlayer(Uri.parse(url));
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     stepDesc.setText(description);

@@ -2,6 +2,7 @@ package com.developers.bakingapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.developers.bakingapp.DetailActivity;
+import com.developers.bakingapp.activities.DetailActivity;
 import com.developers.bakingapp.R;
 import com.developers.bakingapp.model.Ingredient;
 import com.developers.bakingapp.model.Result;
@@ -35,10 +36,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private List<Step> stepList;
     private Intent intent;
     private Gson gson;
+    private SharedPreferences sharedPreferences;
 
     public RecipeAdapter(Context context, List<Result> resultList) {
         this.context = context;
         this.resultList = resultList;
+        sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES,
+                Context.MODE_PRIVATE);
     }
 
 
@@ -65,6 +69,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 String stepJson = gson.toJson(stepList);
                 intent.putExtra(Constants.KEY_INGREDIENTS, ingredientJson);
                 intent.putExtra(Constants.KEY_STEPS, stepJson);
+                String resultJson = gson.toJson(resultList.get(position));
+                sharedPreferences.edit().putString(Constants.WIDGET_RESULT, resultJson).apply();
                 context.startActivity(intent);
             }
         });

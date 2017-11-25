@@ -1,10 +1,10 @@
-package com.developers.bakingapp;
+package com.developers.bakingapp.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.developers.bakingapp.util.Constants;
+import com.developers.bakingapp.R;
+import com.developers.bakingapp.VideoFragment;
 
 public class VideoActivity extends AppCompatActivity {
 

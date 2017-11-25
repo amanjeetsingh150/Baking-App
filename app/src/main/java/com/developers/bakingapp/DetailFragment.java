@@ -1,26 +1,34 @@
 package com.developers.bakingapp;
 
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.developers.bakingapp.activities.VideoActivity;
 import com.developers.bakingapp.adapters.VideoAdapter;
 import com.developers.bakingapp.model.Ingredient;
+import com.developers.bakingapp.model.Result;
 import com.developers.bakingapp.model.Step;
 import com.developers.bakingapp.util.ClickCallBack;
 import com.developers.bakingapp.util.Constants;
-import com.google.android.exoplayer2.C;
+import com.developers.bakingapp.widget.RecipeAppWidgetProvider;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -40,11 +48,11 @@ public class DetailFragment extends Fragment implements ClickCallBack {
     TextView ingredientsText;
     @BindView(R.id.step_recycler_view)
     RecyclerView stepRecyclerView;
-    private String steps, ingredients;
-    private Gson gson;
+    String steps, ingredients;
+    Gson gson;
+    VideoAdapter videoAdapter;
     private List<Step> stepList;
     private List<Ingredient> ingredientList;
-    private VideoAdapter videoAdapter;
     private boolean twoPane;
 
     public DetailFragment() {
@@ -79,6 +87,7 @@ public class DetailFragment extends Fragment implements ClickCallBack {
             stringBuffer.append("\u2022 " + ingredient.getQuantity() + " " +
                     ingredient.getIngredient() + " " + ingredient.getMeasure() + "\n");
         }
+        setHasOptionsMenu(true);
         ingredientsText.setText(stringBuffer.toString());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -115,4 +124,31 @@ public class DetailFragment extends Fragment implements ClickCallBack {
             context.startActivity(intent);
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_widget:
+                SharedPreferences sharedPreferences = getActivity()
+                        .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+                Bundle  bundle=new Bundle();
+                int appWidgetId = bundle.getInt(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+                Log.d(TAG,"YE HHHH__"+appWidgetId);
+                int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), RecipeAppWidgetProvider.class));
+                RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
+                        result.getIngredients());
+                Toast.makeText(getActivity(), "ADDED " + result.getName(), Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

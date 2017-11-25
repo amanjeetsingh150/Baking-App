@@ -2,6 +2,7 @@ package com.developers.bakingapp;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,13 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.developers.bakingapp.activities.MainActivity;
 import com.developers.bakingapp.adapters.RecipeAdapter;
 import com.developers.bakingapp.model.Result;
 import com.developers.bakingapp.util.ApiInterface;
 import com.developers.bakingapp.util.Constants;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -27,9 +29,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 /**
@@ -41,10 +40,13 @@ public class MainFragment extends Fragment {
     private static final String TAG = MainFragment.class.getSimpleName();
     @BindView(R.id.recipe_recycler_view)
     RecyclerView recipeRecyclerView;
+    String resultJson;
+    Gson gson;
     private ApiInterface apiInterface;
     private List<Result> resultList;
     private boolean mTwoPane;
     private RecipeAdapter recipeAdapter;
+    SharedPreferences sharedPreferences;
 
     public MainFragment() {
         // Required empty public constructor
@@ -59,6 +61,7 @@ public class MainFragment extends Fragment {
         ButterKnife.bind(this, view);
         apiInterface = Constants.getRetrofit().create(ApiInterface.class);
         resultList = getRecipeList();
+        gson = new Gson();
         return view;
     }
 
@@ -90,6 +93,7 @@ public class MainFragment extends Fragment {
                         if (!disposable.isDisposed()) {
                             disposable.dispose();
                         }
+                        resultJson = gson.toJson(resultList);
                         recipeAdapter = new RecipeAdapter(getActivity(), resultList);
                         mTwoPane = MainActivity.getNoPane();
                         if (mTwoPane) {

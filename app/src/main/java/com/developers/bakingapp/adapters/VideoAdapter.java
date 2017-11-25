@@ -1,21 +1,16 @@
 package com.developers.bakingapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.developers.bakingapp.R;
-import com.developers.bakingapp.VideoActivity;
-import com.developers.bakingapp.VideoFragment;
 import com.developers.bakingapp.model.Step;
 import com.developers.bakingapp.util.ClickCallBack;
-import com.developers.bakingapp.util.Constants;
 
 import java.util.List;
 

@@ -19,8 +19,11 @@ public class Constants {
     public static final String KEY_STEPS_URL = "stepURL";
     public static final String KEY_PANE = "twoPane";
     public static final String KEY_PANE_VID = "pane";
-    public static final String KEY_VISIBILITY_EXO_PLAYER="exoPlayerVisibility";
-    public static final String KEY_VISIBILITY_PLACEHOLDER="placeHolderVisibility";
+    public static final String KEY_VISIBILITY_EXO_PLAYER = "exoPlayerVisibility";
+    public static final String KEY_VISIBILITY_PLACEHOLDER = "placeHolderVisibility";
+    public static final String WIDGET_RESULT = "recipeList";
+    public static final String SHARED_PREFERENCES="MyPrefs";
+    public static final String KEY_SELECTED_WIDGET="widgetSelection";
 
     private static Retrofit retrofit = null;
 

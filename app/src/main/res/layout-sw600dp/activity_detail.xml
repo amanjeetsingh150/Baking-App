@@ -6,7 +6,7 @@
     android:baselineAligned="false"
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
-    tools:context="com.developers.bakingapp.DetailActivity">
+    tools:context="com.developers.bakingapp.activities.DetailActivity">
 
     <FrameLayout
         android:id="@+id/detail_fragment"
