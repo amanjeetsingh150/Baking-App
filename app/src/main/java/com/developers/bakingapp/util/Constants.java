@@ -23,7 +23,7 @@ public class Constants {
     public static final String KEY_VISIBILITY_PLACEHOLDER = "placeHolderVisibility";
     public static final String WIDGET_RESULT = "recipeList";
     public static final String SHARED_PREFERENCES="MyPrefs";
-    public static final String KEY_SELECTED_WIDGET="widgetSelection";
+    public static final String VISIBILITY_MENU="menuVisibility";
 
     private static Retrofit retrofit = null;
 

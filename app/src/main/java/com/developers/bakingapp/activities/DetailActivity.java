@@ -21,7 +21,6 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         if (findViewById(R.id.video_container_tab) != null) {
             twoPane = true;
-            Log.d(TAG, "IN if ");
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.video_container_tab, new VideoFragment()).commit();
         }
@@ -31,7 +30,7 @@ public class DetailActivity extends AppCompatActivity {
         bundle.putString(Constants.KEY_STEPS_JSON, stepJson);
         bundle.putString(Constants.KEY_INGREDIENTS_JSON, ingredientJson);
         bundle.putBoolean(Constants.KEY_PANE, twoPane);
-        Log.d(TAG, "PAnes " + twoPane);
+        Log.d(TAG, "Panes " + twoPane);
         DetailFragment detailFragment = new DetailFragment();
         detailFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()

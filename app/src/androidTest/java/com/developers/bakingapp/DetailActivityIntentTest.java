@@ -40,6 +40,8 @@ import static org.hamcrest.CoreMatchers.not;
 @RunWith(AndroidJUnit4.class)
 public class DetailActivityIntentTest {
 
+    private static final String RECIPE_ITEM_BROWNIE = "Brownies";
+
     @Rule
     public IntentsTestRule<MainActivity> mActivityRule = new IntentsTestRule<>(
             MainActivity.class);
@@ -53,8 +55,6 @@ public class DetailActivityIntentTest {
 
     @Before
     public void stubAllExternalIntents() {
-        // By default Espresso Intents does not stub any Intents. Stubbing needs to be setup before
-        // every test run. In this case all external Intents will be blocked.
         intending(not(isInternal())).respondWith(new Instrumentation.ActivityResult(Activity.RESULT_OK, null));
     }
 
@@ -63,15 +63,15 @@ public class DetailActivityIntentTest {
     public void clickRecipe_LaunchDetailActivityIntent() {
         onView(withId(R.id.recipe_recycler_view))
                 .perform(RecyclerViewActions.actionOnItem(
-                        hasDescendant(withText("Brownies")), click()));
+                        hasDescendant(withText(RECIPE_ITEM_BROWNIE)), click()));
         Context targetContext = InstrumentationRegistry.getTargetContext();
         targetContext.getResources().getBoolean(R.bool.tab);
         Boolean isTabletUsed = targetContext.getResources().getBoolean(R.bool.tab);
-        if(!isTabletUsed) {
+        if (!isTabletUsed) {
             intended(hasComponent(DetailActivity.class.getName()));
         }
 
-        if(isTabletUsed) {
+        if (isTabletUsed) {
             onView(withId(R.id.video_container_tab)).check(matches(isDisplayed()));
         }
 

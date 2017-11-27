@@ -83,7 +83,7 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
         if (savedInstanceState != null) {
-            menuVisible = savedInstanceState.getBoolean("menuVisibility");
+            menuVisible = savedInstanceState.getBoolean(Constants.VISIBILITY_MENU);
         }
         StringBuffer stringBuffer = new StringBuffer();
         for (Ingredient ingredient : ingredientList) {
@@ -139,24 +139,24 @@ public class DetailFragment extends Fragment implements ClickCallBack {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("menuVisibility", menuVisible);
+        outState.putBoolean(Constants.VISIBILITY_MENU, menuVisible);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-                case R.id.action_add_widget:
-                    SharedPreferences sharedPreferences = getActivity()
-                            .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-                    Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
-                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
-                    Bundle bundle = new Bundle();
-                    int appWidgetId = bundle.getInt(
-                            AppWidgetManager.EXTRA_APPWIDGET_ID,
-                            AppWidgetManager.INVALID_APPWIDGET_ID);
-                    RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
-                            result.getIngredients());
-                    Toast.makeText(getActivity(), "ADDED " + result.getName() + " to Widget.", Toast.LENGTH_SHORT).show();
+            case R.id.action_add_widget:
+                SharedPreferences sharedPreferences = getActivity()
+                        .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+                Bundle bundle = new Bundle();
+                int appWidgetId = bundle.getInt(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+                RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
+                        result.getIngredients());
+                Toast.makeText(getActivity(), "ADDED " + result.getName() + " to Widget.", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
