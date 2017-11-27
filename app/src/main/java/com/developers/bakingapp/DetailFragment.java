@@ -156,7 +156,8 @@ public class DetailFragment extends Fragment implements ClickCallBack {
                         AppWidgetManager.INVALID_APPWIDGET_ID);
                 RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
                         result.getIngredients());
-                Toast.makeText(getActivity(), "ADDED " + result.getName() + " to Widget.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),getActivity().getString(R.string.added_wid)
+                        + result.getName()+" "+getActivity().getString(R.string.to_screen), Toast.LENGTH_SHORT).show();
         }
         return true;
     }

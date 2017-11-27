@@ -9,5 +9,7 @@
     <string name="add_widget">Add widget</string>
     <string name="preferences_key">order</string>
     <string name="ok_button">OK</string>
+    <string name="added_wid">Added</string>
+    <string name="to_screen"> to Widget.</string>
 
 </resources>
