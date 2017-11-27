@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+
+    <string name="servings">Servings:</string>
+    <string name="ingredients_text">INGREDIENTS:</string>
+    <string name="steps_text">Steps:</string>
+    <string name="application_name_exo_player">RecipeStepsVideo</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="preferences_key">order</string>
+    <string name="ok_button">OK</string>
+
+</resources>

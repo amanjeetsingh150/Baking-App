@@ -13,7 +13,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private boolean twoPane;
-    private String stepJson, ingredientJson;
+    String stepJson, ingredientJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

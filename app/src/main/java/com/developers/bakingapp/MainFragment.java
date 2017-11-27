@@ -4,6 +4,10 @@ package com.developers.bakingapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +23,7 @@ import com.developers.bakingapp.adapters.RecipeAdapter;
 import com.developers.bakingapp.model.Result;
 import com.developers.bakingapp.util.ApiInterface;
 import com.developers.bakingapp.util.Constants;
+import com.developers.bakingapp.util.SimpleIdlingResource;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -46,11 +51,14 @@ public class MainFragment extends Fragment {
     private List<Result> resultList;
     private boolean mTwoPane;
     private RecipeAdapter recipeAdapter;
-    SharedPreferences sharedPreferences;
+    SimpleIdlingResource idlingResource;
+
+
 
     public MainFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -60,6 +68,10 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         apiInterface = Constants.getRetrofit().create(ApiInterface.class);
+        idlingResource = (SimpleIdlingResource)((MainActivity)getActivity()).getIdlingResource();
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
         resultList = getRecipeList();
         gson = new Gson();
         return view;
@@ -102,6 +114,7 @@ public class MainFragment extends Fragment {
                                     GridLayoutManager(getActivity(), 3);
                             recipeRecyclerView.setLayoutManager(gridLayoutManager);
                             recipeRecyclerView.setAdapter(recipeAdapter);
+                            idlingResource.setIdleState(true);
                         } else {
                             //LinearVerticalLayout
                             LinearLayoutManager linearLayoutManager = new
@@ -109,11 +122,15 @@ public class MainFragment extends Fragment {
                             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                             recipeRecyclerView.setLayoutManager(linearLayoutManager);
                             recipeRecyclerView.setAdapter(recipeAdapter);
+                            idlingResource.setIdleState(true);
                         }
+
                     }
                 });
         return resultList;
     }
+
+
 
     private void showError(String error) {
         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
