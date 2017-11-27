@@ -3,6 +3,8 @@ package com.developers.bakingapp;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +26,7 @@ import com.developers.bakingapp.model.Result;
 import com.developers.bakingapp.util.ApiInterface;
 import com.developers.bakingapp.util.Constants;
 import com.developers.bakingapp.util.SimpleIdlingResource;
+import com.developers.coolprogressviews.DoubleArcProgress;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -47,18 +50,18 @@ public class MainFragment extends Fragment {
     RecyclerView recipeRecyclerView;
     String resultJson;
     Gson gson;
+    SimpleIdlingResource idlingResource;
+    @BindView(R.id.double_progress_arc)
+    DoubleArcProgress doubleArcProgress;
     private ApiInterface apiInterface;
     private List<Result> resultList;
     private boolean mTwoPane;
     private RecipeAdapter recipeAdapter;
-    SimpleIdlingResource idlingResource;
-
 
 
     public MainFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -68,13 +71,28 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
         apiInterface = Constants.getRetrofit().create(ApiInterface.class);
-        idlingResource = (SimpleIdlingResource)((MainActivity)getActivity()).getIdlingResource();
+        idlingResource = (SimpleIdlingResource) ((MainActivity) getActivity()).getIdlingResource();
         if (idlingResource != null) {
             idlingResource.setIdleState(false);
         }
-        resultList = getRecipeList();
+        doubleArcProgress.setVisibility(View.VISIBLE);
+        if (isNetworkConnected()) {
+            resultList = getRecipeList();
+        } else {
+            Toast.makeText(getActivity(), getActivity().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+        }
         gson = new Gson();
         return view;
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
     }
 
     public List<Result> getRecipeList() {
@@ -124,12 +142,11 @@ public class MainFragment extends Fragment {
                             recipeRecyclerView.setAdapter(recipeAdapter);
                             idlingResource.setIdleState(true);
                         }
-
+                        doubleArcProgress.setVisibility(View.GONE);
                     }
                 });
         return resultList;
     }
-
 
 
     private void showError(String error) {

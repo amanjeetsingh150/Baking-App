@@ -144,15 +144,17 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     }
 
     private void hideUI() {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        //Use Google's "LeanBack" mode to get fullscreen in landscape
-        getActivity().getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        if(((AppCompatActivity) getActivity()).getSupportActionBar()!=null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+            //Use Google's "LeanBack" mode to get fullscreen in landscape
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        }
     }
 
     private void initializePlayer(Uri mediaUri) {

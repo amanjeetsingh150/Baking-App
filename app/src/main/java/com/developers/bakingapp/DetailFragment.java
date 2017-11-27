@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,9 +53,11 @@ public class DetailFragment extends Fragment implements ClickCallBack {
     String steps, ingredients;
     Gson gson;
     VideoAdapter videoAdapter;
+    @BindView(R.id.fab_widget)
+    FloatingActionButton widgetAddButton;
     private List<Step> stepList;
     private List<Ingredient> ingredientList;
-    private boolean twoPane, menuVisible;
+    private boolean twoPane;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -82,9 +86,6 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
-        if (savedInstanceState != null) {
-            menuVisible = savedInstanceState.getBoolean(Constants.VISIBILITY_MENU);
-        }
         StringBuffer stringBuffer = new StringBuffer();
         for (Ingredient ingredient : ingredientList) {
             stringBuffer.append("\u2022 " + ingredient.getQuantity() + " " +
@@ -99,6 +100,23 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         videoAdapter = new VideoAdapter(getActivity(), stepList);
         videoAdapter.setOnClick(this);
         stepRecyclerView.setAdapter(videoAdapter);
+        widgetAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences sharedPreferences = getActivity()
+                        .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+                Bundle bundle = new Bundle();
+                int appWidgetId = bundle.getInt(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+                RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
+                        result.getIngredients());
+                Toast.makeText(getActivity(), "Added "+ result.getName() + " to Widget." , Toast.LENGTH_SHORT).show();
+            }
+        });
         return view;
     }
 
@@ -126,40 +144,6 @@ public class DetailFragment extends Fragment implements ClickCallBack {
             intent.putExtra(Constants.KEY_STEPS_URL, url);
             context.startActivity(intent);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!menuVisible) {
-            inflater.inflate(R.menu.main_menu, menu);
-            menuVisible = true;
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(Constants.VISIBILITY_MENU, menuVisible);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add_widget:
-                SharedPreferences sharedPreferences = getActivity()
-                        .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-                Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
-                Bundle bundle = new Bundle();
-                int appWidgetId = bundle.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID);
-                RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
-                        result.getIngredients());
-                Toast.makeText(getActivity(),getActivity().getString(R.string.added_wid)
-                        + result.getName()+" "+getActivity().getString(R.string.to_screen), Toast.LENGTH_SHORT).show();
-        }
-        return true;
     }
 
 }

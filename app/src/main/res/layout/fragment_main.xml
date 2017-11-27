@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,5 +12,14 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
+    <com.developers.coolprogressviews.DoubleArcProgress
+        android:id="@+id/double_progress_arc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:insideArcColor="@color/colorAccent"
+        app:insideArcRadius="20dp"
+        app:outsideArcColor="@color/colorAccent"
+        app:outsideArcRadius="40dp" />
 
 </FrameLayout>

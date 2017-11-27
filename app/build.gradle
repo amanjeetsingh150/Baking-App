@@ -51,4 +51,5 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:1.0.1'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2')
     androidTestCompile "com.android.support.test.espresso.idling:idling-concurrent:3.0.1"
+    compile 'com.github.amanjeetsingh150:CoolProgressViews:1.0'
 }
