@@ -68,10 +68,12 @@ public class DetailActivityIntentTest {
         targetContext.getResources().getBoolean(R.bool.tab);
         Boolean isTabletUsed = targetContext.getResources().getBoolean(R.bool.tab);
         if (!isTabletUsed) {
+            //if tablet is not used this test ensures that detailActivityOpens
             intended(hasComponent(DetailActivity.class.getName()));
         }
 
         if (isTabletUsed) {
+            //To ensure that video fragment is present and master flow is correctly implemented
             onView(withId(R.id.video_container_tab)).check(matches(isDisplayed()));
         }
 
