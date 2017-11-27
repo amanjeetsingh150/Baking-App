@@ -53,7 +53,7 @@ public class DetailFragment extends Fragment implements ClickCallBack {
     VideoAdapter videoAdapter;
     private List<Step> stepList;
     private List<Ingredient> ingredientList;
-    private boolean twoPane;
+    private boolean twoPane, menuVisible;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -82,6 +82,9 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
+        if (savedInstanceState != null) {
+            menuVisible = savedInstanceState.getBoolean("menuVisibility");
+        }
         StringBuffer stringBuffer = new StringBuffer();
         for (Ingredient ingredient : ingredientList) {
             stringBuffer.append("\u2022 " + ingredient.getQuantity() + " " +
@@ -127,28 +130,35 @@ public class DetailFragment extends Fragment implements ClickCallBack {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
+        if (!menuVisible) {
+            inflater.inflate(R.menu.main_menu, menu);
+            menuVisible = true;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("menuVisibility", menuVisible);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_add_widget:
-                SharedPreferences sharedPreferences = getActivity()
-                        .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-                Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
-                Bundle  bundle=new Bundle();
-                int appWidgetId = bundle.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID);
-                Log.d(TAG,"YE HHHH__"+appWidgetId);
-                int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(getActivity(), RecipeAppWidgetProvider.class));
-                RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
-                        result.getIngredients());
-                Toast.makeText(getActivity(), "ADDED " + result.getName(), Toast.LENGTH_SHORT).show();
+                case R.id.action_add_widget:
+                    SharedPreferences sharedPreferences = getActivity()
+                            .getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+                    Result result = gson.fromJson(sharedPreferences.getString(Constants.WIDGET_RESULT, null), Result.class);
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getActivity());
+                    Bundle bundle = new Bundle();
+                    int appWidgetId = bundle.getInt(
+                            AppWidgetManager.EXTRA_APPWIDGET_ID,
+                            AppWidgetManager.INVALID_APPWIDGET_ID);
+                    RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
+                            result.getIngredients());
+                    Toast.makeText(getActivity(), "ADDED " + result.getName() + " to Widget.", Toast.LENGTH_SHORT).show();
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 }

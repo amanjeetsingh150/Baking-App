@@ -82,6 +82,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_video, container, false);
         ButterKnife.bind(this, view);
+        Log.d(TAG, "In On Create View YAYYYYYYYYYY");
         if (savedInstanceState != null) {
             int placeHolderVisibility = savedInstanceState.getInt(Constants.KEY_VISIBILITY_PLACEHOLDER);
             Log.d(TAG, "ROOOOOOOOOOO" + placeHolderVisibility);
@@ -105,7 +106,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             } else {
                 placeHolderImage.setVisibility(View.GONE);
                 initializeMedia();
-                Log.d(TAG,"URLL "+url);
+                Log.d(TAG, "URLL " + url);
                 initializePlayer(Uri.parse(url));
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     stepDesc.setText(description);
@@ -116,9 +117,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
                 }
             }
         } else {
-            Log.d(TAG, "NULL URLLLLLLL");
             simpleExoPlayerView.setVisibility(View.GONE);
-            placeHolderImage.setVisibility(View.VISIBLE);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 stepDesc.setText(description);
             } else {
