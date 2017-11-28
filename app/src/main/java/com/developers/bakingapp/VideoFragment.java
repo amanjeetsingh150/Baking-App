@@ -104,6 +104,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
                 simpleExoPlayerView.setVisibility(View.GONE);
                 placeHolderImage.setVisibility(View.VISIBLE);
                 if (!thumbnailImage.equals("")) {
+                    //Load thumbnail if present
                     Picasso.with(getActivity()).load(thumbnailImage).into(placeHolderImage);
                 }
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {

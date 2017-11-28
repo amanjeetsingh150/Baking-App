@@ -61,6 +61,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 String.valueOf(resultList.get(position).getServings());
         String imageUrl = resultList.get(position).getImage();
         if (!imageUrl.equals("")) {
+            //Load image if present
             Picasso.with(context).load(imageUrl).into(holder.imageView);
         }
         holder.servingText.setText(servings);
