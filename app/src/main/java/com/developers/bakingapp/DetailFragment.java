@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,9 +58,16 @@ public class DetailFragment extends Fragment implements ClickCallBack {
     VideoAdapter videoAdapter;
     @BindView(R.id.fab_widget)
     FloatingActionButton widgetAddButton;
+    LinearLayoutManager linearLayoutManager;
+    @BindView(R.id.app_bar)
+    AppBarLayout appBarLayout;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
+    int[] scroll, appBarScroll;
     private List<Step> stepList;
     private List<Ingredient> ingredientList;
     private boolean twoPane;
+    private Parcelable mListState;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -80,6 +90,7 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         twoPane = bundle.getBoolean(Constants.KEY_PANE);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,9 +104,12 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         }
         setHasOptionsMenu(true);
         ingredientsText.setText(stringBuffer.toString());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         stepRecyclerView.setLayoutManager(linearLayoutManager);
+        if (savedInstanceState != null) {
+            mListState = savedInstanceState.getParcelable("recyclerViewScroll");
+        }
         Log.d(TAG, stepList.size() + "");
         videoAdapter = new VideoAdapter(getActivity(), stepList);
         videoAdapter.setOnClick(this);
@@ -114,25 +128,37 @@ public class DetailFragment extends Fragment implements ClickCallBack {
                         AppWidgetManager.INVALID_APPWIDGET_ID);
                 RecipeAppWidgetProvider.updateAppWidget(getActivity(), appWidgetManager, appWidgetId, result.getName(),
                         result.getIngredients());
-                Toast.makeText(getActivity(), "Added "+ result.getName() + " to Widget." , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Added " + result.getName() + " to Widget.", Toast.LENGTH_SHORT).show();
             }
         });
         return view;
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onResume() {
+        super.onResume();
+        if (mListState != null) {
+            //Restoring recycler view state
+            linearLayoutManager.onRestoreInstanceState(mListState);
+        }
     }
 
     @Override
-    public void onClick(Context context, Integer id, String description, String url) {
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //storing recycler view state
+        outState.putParcelable(Constants.RECYCLER_VIEW_STATE, linearLayoutManager.onSaveInstanceState());
+    }
+
+    @Override
+    public void onClick(Context context, Integer id, String description, String url, String thumbnailUrl) {
         if (twoPane) {
             Bundle bundle = new Bundle();
             bundle.putInt(Constants.KEY_STEPS_ID, id);
             bundle.putString(Constants.KEY_STEPS_DESC, description);
             bundle.putString(Constants.KEY_STEPS_URL, url);
             bundle.putBoolean(Constants.KEY_PANE_VID, twoPane);
+            bundle.putString(Constants.THUMBNAIL_IMAGE, thumbnailUrl);
             VideoFragment videoFragment = new VideoFragment();
             videoFragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -142,6 +168,7 @@ public class DetailFragment extends Fragment implements ClickCallBack {
             intent.putExtra(Constants.KEY_STEPS_ID, id);
             intent.putExtra(Constants.KEY_STEPS_DESC, description);
             intent.putExtra(Constants.KEY_STEPS_URL, url);
+            intent.putExtra(Constants.THUMBNAIL_IMAGE, thumbnailUrl);
             context.startActivity(intent);
         }
     }

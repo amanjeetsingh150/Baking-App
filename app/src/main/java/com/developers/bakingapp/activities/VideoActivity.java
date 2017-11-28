@@ -20,6 +20,6 @@ public class VideoActivity extends AppCompatActivity {
         VideoFragment videoFragment = new VideoFragment();
         videoFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.video_fragment, videoFragment).commit();
+                .replace(R.id.video_fragment, videoFragment).commit();
     }
 }

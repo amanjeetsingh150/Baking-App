@@ -22,8 +22,10 @@ public class Constants {
     public static final String KEY_VISIBILITY_EXO_PLAYER = "exoPlayerVisibility";
     public static final String KEY_VISIBILITY_PLACEHOLDER = "placeHolderVisibility";
     public static final String WIDGET_RESULT = "recipeList";
-    public static final String SHARED_PREFERENCES="MyPrefs";
-    public static final String VISIBILITY_MENU="menuVisibility";
+    public static final String SHARED_PREFERENCES = "MyPrefs";
+    public static final String MEDIA_POS = "MEDIA_POSITION";
+    public static final String THUMBNAIL_IMAGE = "thumbnailUrl";
+    public static final String RECYCLER_VIEW_STATE = "recyclerViewScroll";
 
     private static Retrofit retrofit = null;
 

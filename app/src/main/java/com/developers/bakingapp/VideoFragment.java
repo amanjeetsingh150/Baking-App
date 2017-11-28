@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.developers.bakingapp.util.Constants;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -37,6 +38,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
+
+import java.net.URI;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,10 +60,12 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     @BindView(R.id.placeholder_no_video_image)
     ImageView placeHolderImage;
     SimpleExoPlayer simpleExoPlayer;
-    private String description, url;
+    long positionPlayer;
+    private String description, url, thumbnailImage;
     private boolean pane;
     private MediaSessionCompat mediaSessionCompat;
     private PlaybackStateCompat.Builder playbackBuilder;
+
 
     public VideoFragment() {
         // Required empty public constructor
@@ -73,6 +79,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             description = bundle.getString(Constants.KEY_STEPS_DESC);
             url = bundle.getString(Constants.KEY_STEPS_URL);
             pane = bundle.getBoolean(Constants.KEY_PANE_VID);
+            thumbnailImage = bundle.getString(Constants.THUMBNAIL_IMAGE);
         }
     }
 
@@ -93,9 +100,12 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         Log.d(TAG, "URL : " + url);
         if (url != null) {
             if (url.equals("")) {
-                Log.d(TAG, "EMPTY URLLLLLLL");
+                Log.d(TAG, "EMPTY URL");
                 simpleExoPlayerView.setVisibility(View.GONE);
                 placeHolderImage.setVisibility(View.VISIBLE);
+                if (!thumbnailImage.equals("")) {
+                    Picasso.with(getActivity()).load(thumbnailImage).into(placeHolderImage);
+                }
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     stepDesc.setText(description);
                 } else {
@@ -104,9 +114,13 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
                     simpleExoPlayerView.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
                 }
             } else {
+                if (savedInstanceState != null) {
+                    //resuming by seeking to the last position
+                    positionPlayer = savedInstanceState.getLong(Constants.MEDIA_POS);
+                }
                 placeHolderImage.setVisibility(View.GONE);
                 initializeMedia();
-                Log.d(TAG, "URLL " + url);
+                Log.d(TAG, "URL " + url);
                 initializePlayer(Uri.parse(url));
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     stepDesc.setText(description);
@@ -144,7 +158,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     }
 
     private void hideUI() {
-        if(((AppCompatActivity) getActivity()).getSupportActionBar()!=null) {
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
             //Use Google's "LeanBack" mode to get fullscreen in landscape
             getActivity().getWindow().getDecorView().setSystemUiVisibility(
@@ -180,6 +194,8 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         super.onSaveInstanceState(outState);
         outState.putInt(Constants.KEY_VISIBILITY_EXO_PLAYER, simpleExoPlayerView.getVisibility());
         outState.putInt(Constants.KEY_VISIBILITY_PLACEHOLDER, placeHolderImage.getVisibility());
+        //Saving current Position before rotation
+        outState.putLong(Constants.MEDIA_POS, positionPlayer);
     }
 
     private void releasePlayer() {
@@ -212,6 +228,27 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         releasePlayer();
         if (mediaSessionCompat != null) {
             mediaSessionCompat.setActive(false);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        //releasing in Pause and saving current position for resuming
+        super.onPause();
+        if (simpleExoPlayer != null) {
+            positionPlayer = simpleExoPlayer.getCurrentPosition();
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+            simpleExoPlayer = null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (simpleExoPlayer != null) {
+            //resuming
+            simpleExoPlayer.seekTo(positionPlayer);
         }
     }
 

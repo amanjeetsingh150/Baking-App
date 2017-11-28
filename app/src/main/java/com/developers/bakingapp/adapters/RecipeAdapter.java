@@ -3,6 +3,7 @@ package com.developers.bakingapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.developers.bakingapp.model.Result;
 import com.developers.bakingapp.model.Step;
 import com.developers.bakingapp.util.Constants;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -57,6 +59,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.dishText.setText(resultList.get(position).getName());
         servings = context.getString(R.string.servings) + " " +
                 String.valueOf(resultList.get(position).getServings());
+        String imageUrl = resultList.get(position).getImage();
+        if (!imageUrl.equals("")) {
+            Picasso.with(context).load(imageUrl).into(holder.imageView);
+        }
         holder.servingText.setText(servings);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +97,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
         @BindView(R.id.card_view)
         CardView cardView;
+
+        @BindView(R.id.dish_image_view)
+        AppCompatImageView imageView;
 
         public RecipeViewHolder(View itemView) {
             super(itemView);

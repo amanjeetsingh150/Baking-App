@@ -47,7 +47,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             public void onClick(View view) {
                 clickCallBack.onClick(context,stepList.get(position).getId(),
                         stepList.get(position).getDescription(),
-                        stepList.get(position).getVideoURL());
+                        stepList.get(position).getVideoURL(),
+                        stepList.get(position).getThumbnailURL());
             }
         });
     }
