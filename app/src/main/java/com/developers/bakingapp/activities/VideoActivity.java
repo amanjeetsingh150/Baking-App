@@ -10,16 +10,31 @@ public class VideoActivity extends AppCompatActivity {
 
     private static final String TAG = VideoActivity.class.getSimpleName();
     private Bundle bundle;
+    private boolean fragmentCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        bundle = new Bundle();
-        bundle = getIntent().getExtras();
-        VideoFragment videoFragment = new VideoFragment();
-        videoFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.video_fragment, videoFragment).commit();
+        if(savedInstanceState!=null){
+            fragmentCreated=savedInstanceState.getBoolean("rotationVideo");
+        }
+        if(!fragmentCreated){
+            //Only init when the bool is false and fragments need to be transacted
+            //for preserving the ExoPlayer instance so that it resumes properly
+            bundle = new Bundle();
+            bundle = getIntent().getExtras();
+            VideoFragment videoFragment = new VideoFragment();
+            videoFragment.setArguments(bundle);
+            fragmentCreated=true;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.video_fragment, videoFragment).commit();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("rotationVideo",fragmentCreated);
     }
 }
