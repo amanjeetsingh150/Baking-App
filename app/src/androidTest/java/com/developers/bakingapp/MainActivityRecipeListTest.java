@@ -41,6 +41,12 @@ public class MainActivityRecipeListTest {
 
     @Test
     public void checkText_MainActivity() {
+        try {
+            //Delay to have list available for test
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(ViewMatchers.withId(R.id.recipe_recycler_view)).perform(RecyclerViewActions.scrollToPosition(1));
         onView(withText(RECIPE_ITEM)).check(matches(isDisplayed()));
     }

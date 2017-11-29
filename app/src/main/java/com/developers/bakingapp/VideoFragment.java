@@ -14,6 +14,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -89,10 +90,10 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_video, container, false);
         ButterKnife.bind(this, view);
-        Log.d(TAG, "In On Create View YAYYYYYYYYYY");
+        Log.d(TAG, "In On Create View");
         if (savedInstanceState != null) {
             int placeHolderVisibility = savedInstanceState.getInt(Constants.KEY_VISIBILITY_PLACEHOLDER);
-            Log.d(TAG, "ROOOOOOOOOOO" + placeHolderVisibility);
+            Log.d(TAG, "Visiblity: " + placeHolderVisibility);
             placeHolderImage.setVisibility(placeHolderVisibility);
             int visibilityExo = savedInstanceState.getInt(Constants.KEY_VISIBILITY_EXO_PLAYER);
             simpleExoPlayerView.setVisibility(visibilityExo);
@@ -190,6 +191,8 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         }
     }
 
+
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -248,7 +251,8 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     public void onResume() {
         super.onResume();
         if (simpleExoPlayer != null) {
-            //resuming
+            //resuming properly
+            simpleExoPlayer.setPlayWhenReady(true);
             simpleExoPlayer.seekTo(positionPlayer);
         }
     }

@@ -2,6 +2,7 @@ package com.developers.bakingapp.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.developers.bakingapp.R;
 import com.developers.bakingapp.VideoFragment;
@@ -17,6 +18,10 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         if (savedInstanceState != null) {
             fragmentCreated = savedInstanceState.getBoolean(Constants.KEY_ROTATION_VIDEO_ACTIVITY);
         }
@@ -31,6 +36,17 @@ public class VideoActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.video_fragment, videoFragment).commit();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        //Back Button to navigate back to the details screen
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return true;
     }
 
     @Override

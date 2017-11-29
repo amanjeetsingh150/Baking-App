@@ -12,28 +12,42 @@ import com.developers.bakingapp.util.Constants;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
-    private boolean twoPane;
     String stepJson, ingredientJson;
+    boolean rotationDetails;
+    private boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        if(savedInstanceState!=null){
+            rotationDetails=savedInstanceState.getBoolean(Constants.KEY_ROTATION_DETAIL_ACTIVITY);
+        }
         if (findViewById(R.id.video_container_tab) != null) {
             twoPane = true;
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.video_container_tab, new VideoFragment()).commit();
         }
-        stepJson = getIntent().getStringExtra(Constants.KEY_STEPS);
-        ingredientJson = getIntent().getStringExtra(Constants.KEY_INGREDIENTS);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.KEY_STEPS_JSON, stepJson);
-        bundle.putString(Constants.KEY_INGREDIENTS_JSON, ingredientJson);
-        bundle.putBoolean(Constants.KEY_PANE, twoPane);
-        Log.d(TAG, "Panes " + twoPane);
-        DetailFragment detailFragment = new DetailFragment();
-        detailFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.detail_fragment, detailFragment).commit();
+        if(!rotationDetails){
+            stepJson = getIntent().getStringExtra(Constants.KEY_STEPS);
+            ingredientJson = getIntent().getStringExtra(Constants.KEY_INGREDIENTS);
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_STEPS_JSON, stepJson);
+            bundle.putString(Constants.KEY_INGREDIENTS_JSON, ingredientJson);
+            bundle.putBoolean(Constants.KEY_PANE, twoPane);
+            Log.d(TAG, "Panes " + twoPane);
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_fragment, detailFragment).commit();
+            rotationDetails = true;
+        }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.getBoolean(Constants.KEY_ROTATION_DETAIL_ACTIVITY, rotationDetails);
+    }
+
 }
