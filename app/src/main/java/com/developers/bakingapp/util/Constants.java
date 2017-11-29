@@ -26,6 +26,7 @@ public class Constants {
     public static final String MEDIA_POS = "MEDIA_POSITION";
     public static final String THUMBNAIL_IMAGE = "thumbnailUrl";
     public static final String RECYCLER_VIEW_STATE = "recyclerViewScroll";
+    public static final String KEY_ROTATION_VIDEO_ACTIVITY="rotationVideo";
 
     private static Retrofit retrofit = null;
 

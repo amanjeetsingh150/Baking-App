@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.developers.bakingapp.R;
 import com.developers.bakingapp.VideoFragment;
+import com.developers.bakingapp.util.Constants;
 
 public class VideoActivity extends AppCompatActivity {
 
@@ -16,17 +17,17 @@ public class VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
-        if(savedInstanceState!=null){
-            fragmentCreated=savedInstanceState.getBoolean("rotationVideo");
+        if (savedInstanceState != null) {
+            fragmentCreated = savedInstanceState.getBoolean(Constants.KEY_ROTATION_VIDEO_ACTIVITY);
         }
-        if(!fragmentCreated){
+        if (!fragmentCreated) {
             //Only init when the bool is false and fragments need to be transacted
             //for preserving the ExoPlayer instance so that it resumes properly
             bundle = new Bundle();
             bundle = getIntent().getExtras();
             VideoFragment videoFragment = new VideoFragment();
             videoFragment.setArguments(bundle);
-            fragmentCreated=true;
+            fragmentCreated = true;
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.video_fragment, videoFragment).commit();
         }
@@ -35,6 +36,6 @@ public class VideoActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("rotationVideo",fragmentCreated);
+        outState.putBoolean(Constants.KEY_ROTATION_VIDEO_ACTIVITY, fragmentCreated);
     }
 }
