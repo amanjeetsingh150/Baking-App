@@ -29,6 +29,7 @@ public class DetailActivity extends AppCompatActivity {
                     .add(R.id.video_container_tab, new VideoFragment()).commit();
         }
         if(!rotationDetails){
+            //Only initialize when needed for preserving rotations states
             stepJson = getIntent().getStringExtra(Constants.KEY_STEPS);
             ingredientJson = getIntent().getStringExtra(Constants.KEY_INGREDIENTS);
             Bundle bundle = new Bundle();
