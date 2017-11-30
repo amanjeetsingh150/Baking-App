@@ -20,15 +20,15 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        if(savedInstanceState!=null){
-            rotationDetails=savedInstanceState.getBoolean(Constants.KEY_ROTATION_DETAIL_ACTIVITY);
+        if (savedInstanceState != null) {
+            rotationDetails = savedInstanceState.getBoolean(Constants.KEY_ROTATION_DETAIL_ACTIVITY);
         }
         if (findViewById(R.id.video_container_tab) != null) {
             twoPane = true;
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.video_container_tab, new VideoFragment()).commit();
         }
-        if(!rotationDetails){
+        if (savedInstanceState == null) {
             //Only initialize when needed for preserving rotations states
             stepJson = getIntent().getStringExtra(Constants.KEY_STEPS);
             ingredientJson = getIntent().getStringExtra(Constants.KEY_INGREDIENTS);
@@ -36,7 +36,7 @@ public class DetailActivity extends AppCompatActivity {
             bundle.putString(Constants.KEY_STEPS_JSON, stepJson);
             bundle.putString(Constants.KEY_INGREDIENTS_JSON, ingredientJson);
             bundle.putBoolean(Constants.KEY_PANE, twoPane);
-            Log.d(TAG, "Panes " + twoPane);
+            Log.d(TAG, "Pane: " + twoPane);
             DetailFragment detailFragment = new DetailFragment();
             detailFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction()

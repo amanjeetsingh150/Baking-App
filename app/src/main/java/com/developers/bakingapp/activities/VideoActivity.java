@@ -21,6 +21,7 @@ public class VideoActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
         }
         if (savedInstanceState != null) {
             fragmentCreated = savedInstanceState.getBoolean(Constants.KEY_ROTATION_VIDEO_ACTIVITY);

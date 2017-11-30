@@ -66,7 +66,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     private boolean pane;
     private MediaSessionCompat mediaSessionCompat;
     private PlaybackStateCompat.Builder playbackBuilder;
-
+    private Uri videoUri;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -124,6 +124,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
                 initializeMedia();
                 Log.d(TAG, "URL " + url);
                 initializePlayer(Uri.parse(url));
+                videoUri = Uri.parse(url);
                 if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                     stepDesc.setText(description);
                 } else {
@@ -192,7 +193,6 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     }
 
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -253,6 +253,11 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         if (simpleExoPlayer != null) {
             //resuming properly
             simpleExoPlayer.setPlayWhenReady(true);
+            simpleExoPlayer.seekTo(positionPlayer);
+        } else {
+            //Correctly initialize and play properly fromm seekTo function
+            initializeMedia();
+            initializePlayer(videoUri);
             simpleExoPlayer.seekTo(positionPlayer);
         }
     }

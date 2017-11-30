@@ -6,15 +6,22 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +71,10 @@ public class DetailFragment extends Fragment implements ClickCallBack {
     AppBarLayout appBarLayout;
     @BindView(R.id.nested_scroll_view)
     NestedScrollView nestedScrollView;
-    int[] scroll, appBarScroll;
+    @BindView(R.id.toolbar_layout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.back_button)
+    ImageButton backButton;
     private List<Step> stepList;
     private List<Ingredient> ingredientList;
     private boolean twoPane;
@@ -97,6 +108,12 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+            }
+        });
         StringBuffer stringBuffer = new StringBuffer();
         for (Ingredient ingredient : ingredientList) {
             stringBuffer.append("\u2022 " + ingredient.getQuantity() + " " +
@@ -108,7 +125,7 @@ public class DetailFragment extends Fragment implements ClickCallBack {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         stepRecyclerView.setLayoutManager(linearLayoutManager);
         if (savedInstanceState != null) {
-            mListState = savedInstanceState.getParcelable("recyclerViewScroll");
+            mListState = savedInstanceState.getParcelable(Constants.RECYCLER_VIEW_STATE);
         }
         Log.d(TAG, stepList.size() + "");
         videoAdapter = new VideoAdapter(getActivity(), stepList);
@@ -132,6 +149,16 @@ public class DetailFragment extends Fragment implements ClickCallBack {
             }
         });
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            getActivity().finish();
+        }
+        return true;
     }
 
     @Override
