@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.support.design.widget.Snackbar;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -79,7 +80,7 @@ public class MainFragment extends Fragment {
         if (isNetworkConnected()) {
             resultList = getRecipeList();
         } else {
-            Toast.makeText(getActivity(), getActivity().getString(R.string.network_error), Toast.LENGTH_SHORT).show();
+            Snackbar.make(view, getActivity().getString(R.string.network_error), Snackbar.LENGTH_LONG).show();
         }
         gson = new Gson();
         return view;
