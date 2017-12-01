@@ -62,6 +62,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
     ImageView placeHolderImage;
     SimpleExoPlayer simpleExoPlayer;
     long positionPlayer;
+    boolean playWhenReady;
     private String description, url, thumbnailImage;
     private boolean pane;
     private MediaSessionCompat mediaSessionCompat;
@@ -97,6 +98,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             placeHolderImage.setVisibility(placeHolderVisibility);
             int visibilityExo = savedInstanceState.getInt(Constants.KEY_VISIBILITY_EXO_PLAYER);
             simpleExoPlayerView.setVisibility(visibilityExo);
+            playWhenReady = savedInstanceState.getBoolean(Constants.KEY_PLAY_WHEN_READY);
         }
         Log.d(TAG, "URL : " + url);
         if (url != null) {
@@ -200,6 +202,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         outState.putInt(Constants.KEY_VISIBILITY_PLACEHOLDER, placeHolderImage.getVisibility());
         //Saving current Position before rotation
         outState.putLong(Constants.MEDIA_POS, positionPlayer);
+        outState.putBoolean(Constants.KEY_PLAY_WHEN_READY, playWhenReady);
     }
 
     private void releasePlayer() {
@@ -241,6 +244,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         super.onPause();
         if (simpleExoPlayer != null) {
             positionPlayer = simpleExoPlayer.getCurrentPosition();
+            playWhenReady = simpleExoPlayer.getPlayWhenReady();
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
             simpleExoPlayer = null;
@@ -252,7 +256,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         super.onResume();
         if (simpleExoPlayer != null) {
             //resuming properly
-            simpleExoPlayer.setPlayWhenReady(true);
+            simpleExoPlayer.setPlayWhenReady(playWhenReady);
             simpleExoPlayer.seekTo(positionPlayer);
         } else {
             //Correctly initialize and play properly fromm seekTo function

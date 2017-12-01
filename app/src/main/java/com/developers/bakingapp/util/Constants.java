@@ -28,6 +28,7 @@ public class Constants {
     public static final String RECYCLER_VIEW_STATE = "recyclerViewScroll";
     public static final String KEY_ROTATION_VIDEO_ACTIVITY="rotationVideo";
     public static final String KEY_ROTATION_DETAIL_ACTIVITY="rotationDetail";
+    public static final String KEY_PLAY_WHEN_READY="playWhenReady";
 
     private static Retrofit retrofit = null;
 
