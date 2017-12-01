@@ -98,6 +98,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             placeHolderImage.setVisibility(placeHolderVisibility);
             int visibilityExo = savedInstanceState.getInt(Constants.KEY_VISIBILITY_EXO_PLAYER);
             simpleExoPlayerView.setVisibility(visibilityExo);
+            //get play when ready boolean
             playWhenReady = savedInstanceState.getBoolean(Constants.KEY_PLAY_WHEN_READY);
         }
         Log.d(TAG, "URL : " + url);
@@ -202,6 +203,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         outState.putInt(Constants.KEY_VISIBILITY_PLACEHOLDER, placeHolderImage.getVisibility());
         //Saving current Position before rotation
         outState.putLong(Constants.MEDIA_POS, positionPlayer);
+        //for preserving state of exoplayer
         outState.putBoolean(Constants.KEY_PLAY_WHEN_READY, playWhenReady);
     }
 
@@ -244,6 +246,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
         super.onPause();
         if (simpleExoPlayer != null) {
             positionPlayer = simpleExoPlayer.getCurrentPosition();
+            //getting play when ready so that player can be properly store state on rotation
             playWhenReady = simpleExoPlayer.getPlayWhenReady();
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
@@ -262,6 +265,7 @@ public class VideoFragment extends Fragment implements ExoPlayer.EventListener {
             //Correctly initialize and play properly fromm seekTo function
             initializeMedia();
             initializePlayer(videoUri);
+            simpleExoPlayer.setPlayWhenReady(playWhenReady);
             simpleExoPlayer.seekTo(positionPlayer);
         }
     }
